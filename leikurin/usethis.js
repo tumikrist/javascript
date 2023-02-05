@@ -52,7 +52,7 @@ const pacman = {
             console.log(this.counter+"odda");
             this.counter--;
         }
-        }, 1000);
+        }, 3000);
     },ghost_timer_for_touch() {
         this.ghost_counter = 0.5;
         pacman_touched_ghost = true;
@@ -163,7 +163,9 @@ const ghost = {
     color_main_copy: 'red',
     color_lines: 'black',
     color_eye: 'white',
-    ghost_speed: 5,
+    ghost_speed: Math.floor(Math.random() * 1.0 - 0.5),
+    ghost_speed_x: Math.floor(Math.random() * 1.0 - 0.5),
+    ghost_speed_y: Math.random() * 1,
     draw() {
         ctx.beginPath();
         ctx.fillStyle = this.color_main;
@@ -239,21 +241,24 @@ const ghost = {
             this.color_main = 'rgb(0,102,204)';
         }
         }, 1000);
-    },
-    movment() {
-        let random = Math.floor(Math.random() * 16);
-        if (random === 0 || random === 1 || random === 2 || random === 3) {
-            this.x += this.ghost_speed;
-        } else if (random === 4 || random === 5 || random === 6 || random === 7) {
-            this.x -= this.ghost_speed;
-        } else if (random === 8 || random === 9 || random === 10 || random === 11) {
-            this.y += this.ghost_speed;
-        } else if (random ===  12 || random === 13 || random === 14 || random === 15) {
-            this.y -= this.ghost_speed;
-        }
     }, 
+    movethem() {
+        this.x += this.ghost_speed_x;
+        this.y += this.ghost_speed_y;
+    },
     wall_tracker() {
-
+        if (this.x < 0 + this.radius) {
+            this.ghost_speed_x = -this.ghost_speed_x;
+        }
+        if (this.x > play_width - this.radius) {
+            this.ghost_speed_x = -this.ghost_speed_x;
+        }
+        if (this.y < 0 + this.radius) {
+            this.ghost_speed_y = -this.ghost_speed_y;
+        }
+        if (this.y > play_height - this.radius) {
+            this.ghost_speed_y = -this.ghost_speed_y;
+        }
     }
 }
 
@@ -450,36 +455,55 @@ function ui(){
 }
 
 function ghost_movement_timer(){
-    timer = 3;
-    let intervalId = setInterval(() => {
-        if (timer <= 0) {
-            timer=3;
-            for (let i = 0; i < ghosts_list.length; i++) {
-                ghosts_list[i].movment();
+    for (let i = 0; i < ghosts_list.length; i++) {
+        random = Math.floor(Math.random() * 3);
+                if (random === 0) {
+                    for (let i = 0; i < ghosts_list.length; i++) {
+                        ghosts_list[i].ghost_speed_x = Math.floor(Math.random() * 0.7 - 0.3) ;
+                        ghosts_list[i].ghost_speed_y = Math.floor(Math.random() * 0.7 - 0.3) ;
+                    }
+                } else if (random === 1) {
+                    for (let i = 0; i < ghosts_list.length; i++) {
+                        ghosts_list[i].ghost_speed_x = Math.floor(Math.random() * 0.7 - 0.3) -1 ;
+                        ghosts_list[i].ghost_speed_y = Math.floor(Math.random() * 0.7 - 0.3) -1;
+                    }
+                }   else if (random === 2) {
+                    ghosts_list[i].ghost_speed_y = Math.floor(Math.random() * 0.7 - 0.3) ;
+                    ghosts_list[i].ghost_speed_x = Math.floor(Math.random() * 0.7 - 0.3) -1 ;
+                }  else if (random === 3) {
+                    ghosts_list[i].ghost_speed_x = Math.floor(Math.random() * 0.7 - 0.3);
+                    ghosts_list[i].ghost_speed_y = Math.floor(Math.random() * 0.7 - 0.3) -1;
+                }
+                console.log("Countdown complete!!!!!!!!!!");
             }
-            timer=3;
-            clearInterval(intervalId);
-            console.log("Countdown complete!!!!!!!!!!");
-        } else {
-            timer--;
-        }
-    }, 1000);
 }
 
-
+function timer(){
+    var timeleft = 3;
+    var downloadTimer = setInterval(function(){
+        if(timeleft <= 0){
+            ghost_movement_timer();
+            clearInterval(downloadTimer);
+            timer();
+        }
+        console.log(timeleft + " seconds remaining");
+        timeleft -= 1;
+    }, 1000);
+}
 
 function init(){
     if (pacman.pacman_life > 0) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ui();
-        ghost_movement_timer();
         pacman.draw();
         pacman.wall_tracker();
+
 
         for (let i = 0; i < ghosts_list.length; i++) {
             ghosts_list[i].draw();
             ghosts_list[i].tracker();
             ghosts_list[i].wall_tracker();
+            ghosts_list[i].movethem();
         }
 
         for (let i = 0; i < pellets.length; i++) {
@@ -506,4 +530,5 @@ function init(){
 console.log(play_height+" "+play_width);
 
 buatil();
+timer();
 init();
