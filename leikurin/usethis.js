@@ -3,13 +3,17 @@ const ctx = canvas.getContext('2d');
 const angle = Math.PI / 180;
 const score_keeper = document.getElementById('player_score');
 const life_maneger = document.getElementById('player_lives');
-/* canvas.width  = window.innerWidth;
-canvas.height = window.innerHeight; */
+canvas.width  = window.innerWidth-50;
+canvas.height = window.innerHeight -50; 
+
+play_width  = window.innerWidth-50;
+play_height = window.innerHeight -50; 
+
 
 
 const pacman = {
-    x: 400,
-    y: 400,
+    x: play_width/2,
+    y: play_height/2,
     radius: 25,
     color: 'yellow',
     pacman_speed: 2,
@@ -62,6 +66,20 @@ const pacman = {
                 this.ghost_counter--;
             }
         }, 1000);
+    },
+    wall_tracker() {
+        if (this.x < 0 + this.radius) {
+            arrowleft = false;
+        }
+        if (this.x > play_width - this.radius) {
+            arrowright = false;
+        }
+        if (this.y < 0 + this.radius) {
+            arrowup = false;
+        }
+        if (this.y > play_height - this.radius) {
+            arrowdown = false;
+        }
     }
 };
 
@@ -94,7 +112,6 @@ const pellet = {
             this.x = 1000;
             this.y = 1000;
             player_score += 1;
-            score_keeper.innerHTML = "score : "+player_score;
         }   
     }
 }
@@ -132,7 +149,6 @@ const power_pellet = {
             this.x = 1000;
             this.y = 1000;
             player_score += 1;
-            score_keeper.innerHTML = "score : "+player_score;
         }   
     }
 }
@@ -193,14 +209,12 @@ const ghost = {
                 this.x = Math.floor(Math.random() * 750);
                 this.y = Math.floor(Math.random() * 750);
                 player_score += 1;
-                score_keeper.innerHTML = "score : "+player_score;
                 console.log('die');
             } else  {
                 if (pacman_touched_ghost === false) {
                     pacman.ghost_timer_for_touch();
                     pacman.pacman_life -=1;
                     console.log('die pacman'+pacman.pacman_life);
-                    life_maneger.innerHTML = "Lives : "+pacman.pacman_life;
                 } else {
                     console.log('no lives lost pacman');
                 }
@@ -225,7 +239,22 @@ const ghost = {
             this.color_main = 'rgb(0,102,204)';
         }
         }, 1000);
-    } 
+    },
+    movment() {
+        let random = Math.floor(Math.random() * 16);
+        if (random === 0 || random === 1 || random === 2 || random === 3) {
+            this.x += this.ghost_speed;
+        } else if (random === 4 || random === 5 || random === 6 || random === 7) {
+            this.x -= this.ghost_speed;
+        } else if (random === 8 || random === 9 || random === 10 || random === 11) {
+            this.y += this.ghost_speed;
+        } else if (random ===  12 || random === 13 || random === 14 || random === 15) {
+            this.y -= this.ghost_speed;
+        }
+    }, 
+    wall_tracker() {
+
+    }
 }
 
 arrowdown = false;
@@ -339,70 +368,102 @@ function colision(){
 
 player_score = 0;
 
-
+function buatil(){
+    const pellet1 = Object.create(pellet);
+    const pellet2 = Object.create(pellet);
+    const pellet3 = Object.create(pellet);
+    const pellet4 = Object.create(pellet);
+    const pellet5 = Object.create(pellet);
+    const pellet6 = Object.create(pellet);
+    const pellet7 = Object.create(pellet);
+    const pellet8 = Object.create(pellet);
+    const pellet9 = Object.create(pellet);
+    const pellet10 = Object.create(pellet);
+    const pellet11 = Object.create(pellet);
+    const pellet12 = Object.create(pellet);
+    pellets = [pellet1, pellet2, pellet3, pellet4, pellet5, pellet6, pellet7, pellet8, pellet9, pellet10, pellet11, pellet12];
+    
+    for (let i = 0; i < pellets.length; i++) {
+        pellets[i].x = Math.floor(Math.random() * play_width);
+        pellets[i].y = Math.floor(Math.random() * play_height);
+        pellets[i].id = i;
+    }
+    
+    const power_pellet1 = Object.create(power_pellet);
+    const power_pellet2 = Object.create(power_pellet);
+    const power_pellet3 = Object.create(power_pellet);
+    const power_pellet4 = Object.create(power_pellet);
+    power_pellets = [power_pellet1, power_pellet2, power_pellet3, power_pellet4];
+    
+    power_pellet1.x = 20;
+    power_pellet1.y = 20;
+    
+    power_pellet2.x = play_width-20;
+    power_pellet2.y = play_height-20;
+    
+    power_pellet3.x = play_width-20;
+    power_pellet3.y = 20;
+    
+    power_pellet4.x = 20;
+    power_pellet4.y = play_height-20;
+    // bua til shit end
+    
+    
+    const red_ghost = Object.create(ghost);
+    const pink_ghost = Object.create(ghost);
+    const cyan_ghost = Object.create(ghost);
+    const orage_ghost = Object.create(ghost);
+    ghosts_list = [red_ghost,pink_ghost ,cyan_ghost ,orage_ghost ];
+    
+    red_ghost.color_main = "red";
+    red_ghost.color_main_copy = "red";
+    
+    pink_ghost.color_main = "pink";
+    pink_ghost.color_main_copy = "pink";
+    
+    cyan_ghost.color_main = "cyan";
+    cyan_ghost.color_main_copy = "cyan";
+    
+    orage_ghost.color_main = "orage";
+    orage_ghost.color_main_copy = "orage";
+    
+    for (let i = 0; i < ghosts_list.length; i++) {
+        ghosts_list[i].x = Math.floor(Math.random() * play_width);
+        ghosts_list[i].y = Math.floor(Math.random() * play_height);
+        ghosts_list[i].id = i;
+    }
+}
 // bua til shit 
-const pellet1 = Object.create(pellet);
-const pellet2 = Object.create(pellet);
-const pellet3 = Object.create(pellet);
-const pellet4 = Object.create(pellet);
-const pellet5 = Object.create(pellet);
-const pellet6 = Object.create(pellet);
-const pellet7 = Object.create(pellet);
-const pellet8 = Object.create(pellet);
-const pellet9 = Object.create(pellet);
-const pellet10 = Object.create(pellet);
-const pellet11 = Object.create(pellet);
-const pellet12 = Object.create(pellet);
-pellets = [pellet1, pellet2, pellet3, pellet4, pellet5, pellet6, pellet7, pellet8, pellet9, pellet10, pellet11, pellet12];
 
-for (let i = 0; i < pellets.length; i++) {
-    pellets[i].x = Math.floor(Math.random() * 750);
-    pellets[i].y = Math.floor(Math.random() * 750);
-    pellets[i].id = i;
+function ui(){
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "red";
+    ctx.fillText("Score : "+player_score, play_width-200, 40);
+
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "red";
+    ctx.fillText("lives : "+pacman.pacman_life, play_width-350, 40);
+
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "red";
+    ctx.fillText("High Score : ", play_width-250, play_height-40);
 }
 
-const power_pellet1 = Object.create(power_pellet);
-const power_pellet2 = Object.create(power_pellet);
-const power_pellet3 = Object.create(power_pellet);
-const power_pellet4 = Object.create(power_pellet);
-power_pellets = [power_pellet1, power_pellet2, power_pellet3, power_pellet4];
-
-power_pellet1.x = 20;
-power_pellet1.y = 20;
-
-power_pellet2.x = 780;
-power_pellet2.y = 780;
-
-power_pellet3.x = 780;
-power_pellet3.y = 20;
-
-power_pellet4.x = 20;
-power_pellet4.y = 780;
-// bua til shit end
-
-
-const red_ghost = Object.create(ghost);
-const pink_ghost = Object.create(ghost);
-const cyan_ghost = Object.create(ghost);
-const orage_ghost = Object.create(ghost);
-ghosts_list = [red_ghost,pink_ghost ,cyan_ghost ,orage_ghost ];
-
-red_ghost.color_main = "red";
-red_ghost.color_main_copy = "red";
-
-pink_ghost.color_main = "pink";
-pink_ghost.color_main_copy = "pink";
-
-cyan_ghost.color_main = "cyan";
-cyan_ghost.color_main_copy = "cyan";
-
-orage_ghost.color_main = "orage";
-orage_ghost.color_main_copy = "orage";
-
-for (let i = 0; i < ghosts_list.length; i++) {
-    ghosts_list[i].x = Math.floor(Math.random() * 750);
-    ghosts_list[i].y = Math.floor(Math.random() * 750);
-    ghosts_list[i].id = i;
+function ghost_movement_timer(){
+    timer = 3;
+    let intervalId = setInterval(() => {
+        if (timer <= 0) {
+            timer=3;
+            for (let i = 0; i < ghosts_list.length; i++) {
+                ghosts_list[i].movment();
+            }
+            timer=3;
+            clearInterval(intervalId);
+            console.log("Countdown complete!!!!!!!!!!");
+        } else {
+            timer--;
+        }
+    }, 1000);
 }
 
 
@@ -410,15 +471,15 @@ for (let i = 0; i < ghosts_list.length; i++) {
 function init(){
     if (pacman.pacman_life > 0) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "30px Arial";
-        ctx.fillStyle = "red";
-        ctx.fillText("Game Over", 200, 400);
-        
+        ui();
+        ghost_movement_timer();
         pacman.draw();
+        pacman.wall_tracker();
 
         for (let i = 0; i < ghosts_list.length; i++) {
             ghosts_list[i].draw();
             ghosts_list[i].tracker();
+            ghosts_list[i].wall_tracker();
         }
 
         for (let i = 0; i < pellets.length; i++) {
@@ -434,12 +495,15 @@ function init(){
         move();
         colision();
         window.requestAnimationFrame(init);
+
     }else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.font = "30px Arial";
+        ctx.font = "50px Arial";
         ctx.fillStyle = "red";
-        ctx.fillText("Game Over", 200, 400);
+        ctx.fillText("Game Over", play_width/2, play_height/2);
     }
 }
-console.log(screen.width+" "+screen.height);
+console.log(play_height+" "+play_width);
+
+buatil();
 init();
