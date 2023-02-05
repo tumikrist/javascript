@@ -533,3 +533,48 @@ console.log(play_height+" "+play_width);
 buatil();
 timer();
 init();
+```
+``` html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <canvas id="canvas" width="800" height="800" >
+        <!-- <h2 id="player_score">Score : 0</h2>
+        <h2 id="player_lives">Lives : 3</h2>  -->
+    </canvas>
+
+    <!-- <h2 id="player_score">Score : 0</h2>
+    <h2 id="player_lives">Lives : 3</h2>  -->
+
+    <script src = "./usethis.js"> </script>
+
+    <style>
+        canvas {
+            padding-left: 0;
+            padding-right: 0;
+            background-color: black;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            border-style: solid;
+            border-width: 10px;
+            border-color: aqua;
+        }
+        #player_score {
+            color:black;
+        }
+        #player_lives {
+            color:black;
+        }
+        
+    </style>
+</body>
+</html> 
+```
