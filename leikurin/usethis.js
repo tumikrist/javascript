@@ -3,30 +3,8 @@ const ctx = canvas.getContext('2d');
 const angle = Math.PI / 180;
 const score_keeper = document.getElementById('player_score');
 const life_maneger = document.getElementById('player_lives');
-
-let counter = 0;
-
-let ghost_counter = 0;
-
-
-
-
-function ghost_timer_for_touch() {
-    ghost_counter = 0.5;
-    pacman_touched_ghost = true;
-    let intervalId = setInterval(() => {
-        if (ghost_counter <= 0) {
-            clearInterval(intervalId);
-            console.log("Countdown complete!");
-            pacman_touched_ghost = false;
-        } else {
-            console.log(ghost_counter);
-            ghost_counter--;
-        }
-    }, 1000);
-}
-
-
+/* canvas.width  = window.innerWidth;
+canvas.height = window.innerHeight; */
 
 
 const pacman = {
@@ -39,6 +17,8 @@ const pacman = {
     angle_1: 30,
     angle_2: 330,
     can_kill_ghost: false,
+    ghost_counter : 0,
+    counter : 0,
     draw() {
         ctx.beginPath();
         ctx.strokeStyle = 'black';
@@ -51,45 +31,36 @@ const pacman = {
         ctx.fill();
     },
     pacman_power_pellet_effect() {
-        counter += 4;
+        this.counter += 6;
         this.can_kill_ghost = true;
         this.color = 'blue';
 
-        for(let i = 0; i < ghosts_list.length; i++) {
-            ghosts_list[i].color_main = ghosts_list[i].color_main_copy;
-        }
-        //ghost.color_main = 'rgb(0,102,204)';
-
         let intervalId = setInterval(() => {
-        if (counter === 0) {
+        if (this.counter === 0) {
             clearInterval(intervalId);
             this.can_kill_ghost = false;
             this.color = 'yellow';
-
-            for(let i = 0; i < ghosts_list.length; i++) {
-                ghosts_list[i].color_main = ghosts_list[i].color_main_copy;
-            }
-            //ghost.color_main = ghost.color_main_copy;
             console.log("Countdown complete!");
-        } else if(counter % 2 == 0) {
-            console.log(counter+"slett");
-
-            for(let i = 0; i < ghosts.length; i++) {
-                ghosts_list[i].color_main = ghosts_list[i].color_main_copy;
-            }
-            //ghost.color_main = ghost.color_main_copy;
-            counter--;
-        } else if (counter % 2 == 1) {
-            console.log(counter+"odda");
-
-            for(let i = 0; i < ghosts_list.length; i++) {
-                ghosts_list[i].color_main = ghosts_list[i].color_main_copy;
-                ghosts_list[i].color_main = 'rgb(0,102,204)';
-            }
-            /* ghost.color_main = ghost.color_main_copy;
-            ghost.color_main = 'rgb(0,102,204)'; */
-            counter--;
+        } else if(this.counter % 2 == 0) {
+            console.log(this.counter+"slett");
+            this.counter--;
+        } else if (this.counter % 2 == 1) {
+            console.log(this.counter+"odda");
+            this.counter--;
         }
+        }, 1000);
+    },ghost_timer_for_touch() {
+        this.ghost_counter = 0.5;
+        pacman_touched_ghost = true;
+        let intervalId = setInterval(() => {
+            if (this.ghost_counter <= 0) {
+                clearInterval(intervalId);
+                console.log("Countdown complete!");
+                pacman_touched_ghost = false;
+            } else {
+                console.log(this.ghost_counter);
+                this.ghost_counter--;
+            }
         }, 1000);
     }
 };
@@ -155,9 +126,9 @@ const power_pellet = {
         if (distance < sumofradii) {
             console.log('collision');
             pacman.pacman_power_pellet_effect();
-            /* for(let i = 0; i < ghosts.length; i++) {
-                ghost[i].change_color();
-            } */
+            for (let i = 0; i < ghosts_list.length; i++) {
+                ghosts_list[i].change_color();
+            }
             this.x = 1000;
             this.y = 1000;
             player_score += 1;
@@ -226,7 +197,7 @@ const ghost = {
                 console.log('die');
             } else  {
                 if (pacman_touched_ghost === false) {
-                    ghost_timer_for_touch();
+                    pacman.ghost_timer_for_touch();
                     pacman.pacman_life -=1;
                     console.log('die pacman'+pacman.pacman_life);
                     life_maneger.innerHTML = "Lives : "+pacman.pacman_life;
@@ -236,27 +207,25 @@ const ghost = {
             }
             //console.log('collision');
         }   
-    }/* ,
+    },
     change_color() {
-        ghost.color_main = 'rgb(0,102,204)';
+        this.color_main = 'rgb(0,102,204)';
 
         let intervalId = setInterval(() => {
-        if (counter === 0) {
+        if (pacman.counter === 0) {
             clearInterval(intervalId);
-            this.color_main = ghost.color_main_copy;
+            this.color_main = this.color_main_copy;
             console.log("Countdown complete!");
-        } else if(counter % 2 == 0) {
-            console.log(counter+"slett");
-            ghost.color_main = ghost.color_main_copy;
-            counter--;
-        } else if (counter % 2 == 1) {
-            console.log(counter+"odda");
-            ghost.color_main = ghost.color_main_copy;
-            ghost.color_main = 'rgb(0,102,204)';
-            counter--;
+        } else if(pacman.counter % 2 == 0) {
+            console.log(pacman.counter+"slett");
+            this.color_main = this.color_main_copy;
+        } else if (pacman.counter % 2 == 1) {
+            console.log(pacman.counter+"odda");
+            this.color_main = this.color_main_copy;
+            this.color_main = 'rgb(0,102,204)';
         }
         }, 1000);
-    } */
+    } 
 }
 
 arrowdown = false;
@@ -411,23 +380,24 @@ power_pellet4.x = 20;
 power_pellet4.y = 780;
 // bua til shit end
 
+
 const red_ghost = Object.create(ghost);
+const pink_ghost = Object.create(ghost);
+const cyan_ghost = Object.create(ghost);
+const orage_ghost = Object.create(ghost);
+ghosts_list = [red_ghost,pink_ghost ,cyan_ghost ,orage_ghost ];
+
 red_ghost.color_main = "red";
 red_ghost.color_main_copy = "red";
 
-const pink_ghost = Object.create(ghost);
 pink_ghost.color_main = "pink";
 pink_ghost.color_main_copy = "pink";
 
-const cyan_ghost = Object.create(ghost);
 cyan_ghost.color_main = "cyan";
 cyan_ghost.color_main_copy = "cyan";
 
-const orage_ghost = Object.create(ghost);
 orage_ghost.color_main = "orage";
 orage_ghost.color_main_copy = "orage";
-
-ghosts_list = [red_ghost,pink_ghost ,cyan_ghost ,orage_ghost ];
 
 for (let i = 0; i < ghosts_list.length; i++) {
     ghosts_list[i].x = Math.floor(Math.random() * 750);
@@ -436,27 +406,40 @@ for (let i = 0; i < ghosts_list.length; i++) {
 }
 
 
+
 function init(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    pacman.draw();
-    
-    for (let i = 0; i < ghosts_list.length; i++) {
-        ghosts_list[i].draw();
-        ghosts_list[i].tracker();
-    }
+    if (pacman.pacman_life > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("Game Over", 200, 400);
+        
+        pacman.draw();
 
-    for (let i = 0; i < pellets.length; i++) {
-        pellets[i].draw();
-        pellets[i].tracker();
-    }
+        for (let i = 0; i < ghosts_list.length; i++) {
+            ghosts_list[i].draw();
+            ghosts_list[i].tracker();
+        }
 
-    for (let i = 0; i < power_pellets.length; i++) {
-        power_pellets[i].draw();
-        power_pellets[i].tracker();
-    }
+        for (let i = 0; i < pellets.length; i++) {
+            pellets[i].draw();
+            pellets[i].tracker();
+        }
 
-    move();
-    colision();
-    window.requestAnimationFrame(init);
+        for (let i = 0; i < power_pellets.length; i++) {
+            power_pellets[i].draw();
+            power_pellets[i].tracker();
+        }
+
+        move();
+        colision();
+        window.requestAnimationFrame(init);
+    }else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("Game Over", 200, 400);
+    }
 }
+console.log(screen.width+" "+screen.height);
 init();
