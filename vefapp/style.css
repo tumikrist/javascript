@@ -1,0 +1,23 @@
+img {
+    float: left;
+    width:  200px;
+    height: 200px;
+    object-fit: cover;
+}
+.container {
+    background-color: yellow;
+    display: grid;
+    grid-template-columns: 80px 200px auto 40px;
+    justify-items: start;
+    justify-content: space-evenly;
+    /* display: flex ; 
+    flex-flow: column wrap; */
+    
+}
+.user {
+    /* flex-grow: 5;*/
+    color: black; 
+}
+
+/* klara breyta myndinni i div sem verður bakgrunnur og
+svo er textin annað div sem verður fyrir ofan myndinna */
